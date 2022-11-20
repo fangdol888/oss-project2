@@ -1,25 +1,57 @@
 #PLEASE WRITE THE GITHUB URL BELOW!
-#
+#https://github.com/fangdol888/oss-project2
 
 import sys
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, precision_score,recall_score
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
 
 def load_dataset(dataset_path):
-	#To-Do: Implement this function
+    return pd.read_csv(dataset_path)
 
-def dataset_stat(dataset_df):	
-	#To-Do: Implement this function
+def dataset_stat(dataset_df):
+    return (dataset_df.drop(['target'],axis=1).shape[1], dataset_df[dataset_df['target']==0].shape[0], dataset_df[dataset_df['target']==1].shape[0])
 
 def split_dataset(dataset_df, testset_size):
-	#To-Do: Implement this function
-
+    target= dataset_df['target']
+    dataset_df = dataset_df.drop('target',axis=1)
+    return train_test_split(dataset_df, target, test_size=testset_size)
+    
 def decision_tree_train_test(x_train, x_test, y_train, y_test):
-	#To-Do: Implement this function
+	dt_cls = DecisionTreeClassifier()
+	dt_cls.fit(x_train, y_train)
+	y_pred = dt_cls.predict(x_test)
+	acc = accuracy_score(y_test, y_pred)
+	prec = precision_score(y_test, y_pred)
+	rec = recall_score(y_test,y_pred)
+	return (acc, prec, rec)
+ 
 
 def random_forest_train_test(x_train, x_test, y_train, y_test):
-	#To-Do: Implement this function
+	rf_cls = RandomForestClassifier()
+	rf_cls.fit(x_train, y_train)
+	y_pred = rf_cls.predict(x_test)
+	acc = accuracy_score(y_test, y_pred)
+	prec = precision_score(y_test, y_pred)
+	rec = recall_score(y_test,y_pred)
+	return (acc, prec, rec)
 
 def svm_train_test(x_train, x_test, y_train, y_test):
-	#To-Do: Implement this function
+	svm_pipe = make_pipeline(
+		StandardScaler(),
+		SVC()
+	)
+	svm_pipe.fit(x_train,y_train)
+	y_pred = svm_pipe.predict(x_test)
+	acc = accuracy_score(y_test, y_pred)
+	prec = precision_score(y_test, y_pred)
+	rec = recall_score(y_test,y_pred)
+	return (acc, prec, rec)
 
 def print_performances(acc, prec, recall):
 	#Do not modify this function!
